@@ -1,17 +1,8 @@
-#def where(board, n, p, player, i, j):
-#    """"""
-#def breaktrough(n, p):
-#    """"""
-#def select_pawn(board, n, p, player):
-#    """"""
-
 def new_board(n, p):
-    """ n: int
-        p: int
-        return: list[list[int]]
+    """int -> int -> list (list int)
 
-        Initialize a fresh new board of n rows and p columns where n > 4
-        (adjusted if too low) and returns it.
+    Initialize a fresh new board of n rows and p columns where n > 4
+    (adjusted if too low) and returns it.
     """
 
     # Raising number of rows if it does not match the rules
@@ -25,13 +16,10 @@ def new_board(n, p):
     return first_player_pawns + empty_board[2:-2] + second_player_pawns
 
 def display_board(board, n, p):
-    """ board: list[list[int]]
-        n: int
-        p: int
-        return: nothing
+    """list (list int) -> int -> int -> IO
 
-        Iterate the board and display each of its values replaced with
-        characters to make it prettier to the user.
+    Iterate the board and display each of its values replaced with
+    characters to make it prettier to the user.
     """
 
     for y in board:
@@ -44,3 +32,74 @@ def display_board(board, n, p):
                 print('o', end='')
         # Do not forget to carriage return !
         print()
+
+def select_pawn(board, n, p, player):
+    """list (list int) -> int -> int -> int -> int, int
+
+    Let the designated player choose a valid pawn to move and returns it.
+    """
+
+    print("Choose the pawn you want to move.")
+    x = int(input("Its x coordinates: "))
+    y = int(input("Its y coordinates: "))
+
+    if pawn_valid(board, n, p, player, x, y):
+        return x, y
+    else:
+        print("These coordinates are invalid, please retry.")
+        return select_pawn(board, n, p, player)
+
+def pawn_valid(board, n, p, player, x, y):
+    """list (list int) -> int -> int > int -> int -> int -> bool
+
+    Given coordinates, I will check if there is a pawn there belonging to a
+    specified player and if it is able to move.
+    """
+
+    # Return true if all rules are respected
+    return coordinates_within_board(n, p, x, y) \
+           and pawn_exist(board, x, y) \
+           and pawn_belong_to_player(board, player, x, y) \
+           and pawn_can_move(board, player, x, y)
+
+def coordinates_within_board(board_height, board_width, x, y):
+    """int -> int -> int -> int -> bool
+
+    Are the given coordinates inside the board ?
+    """
+
+    return x < board_width \
+           and y < board_height \
+           and x >= 0 \
+           and y >= 0
+
+def pawn_exist(board, x, y):
+    """list (list int) -> int -> int -> bool
+
+    Is there a pawn at these coordinates ?
+    """
+
+    return board[y][x] is not 0
+
+def pawn_belong_to_player(board, player, x, y):
+    """list (list int) -> int -> int -> int -> bool
+
+    Does that pawn belongs to the player ?
+    """
+
+    return board[y][x] is player
+
+def pawn_can_move(board, player, x, y):
+    """list (list int) -> int -> int -> int -> bool
+
+    Is the pawn able to move ?
+    """
+
+    direction = 1 if player is 1 else -1
+    facing_squares = board[y + direction][x-1:x+1]
+    opponent = 1 if player is 2 else 1
+
+    # Return true if at least one of the square facing the pawn is nor a friend
+    # nor outside of the board
+    return opponent in facing_squares \
+           or 0 in facing_squares
