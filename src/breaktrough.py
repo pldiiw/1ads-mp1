@@ -95,11 +95,70 @@ def pawn_can_move(board, player, x, y):
     Is the pawn able to move ?
     """
 
-    direction = 1 if player is 1 else -1
-    facing_squares = board[y + direction][x-1:x+1]
+    facing_squares = pawn_facing_squares(board, player, x, y)
     opponent = 1 if player is 2 else 1
 
     # Return true if at least one of the square facing the pawn is nor a friend
     # nor outside of the board
     return opponent in facing_squares \
            or 0 in facing_squares
+
+def where(board, n, p, player, i, j):
+    """list (list int) -> int -> int -> int -> int -> int -> int
+
+    Ask player where he wants to move the pawn located at i and j.
+    High level implementation.
+    """
+
+    print("Where do you want to move this pawn ?")
+    return where_(board, player, i, j)
+
+
+def where_(board, player, x, y):
+    """list (list int) -> int -> int -> int -> int
+
+    Let player choose to which column he wants to move the pawn present at
+    x and y coordinates and return this number if it is valid,
+    otherwise re-ask him by re-calling the function.
+    Low level implementation of where function.
+    """
+
+    available_moves = pawn_available_moves(board, player, x, y)
+    choice = int(input("Column number (" + str(available_moves)[1:-1] + "): "))
+
+    if choice in available_moves:
+        return choice
+    else:
+        print("You cannot move it there, please retry.")
+        return where_(board, player, x, y)
+
+def pawn_available_moves(board, player, x, y):
+    """list (list int) -> int -> int -> int -> list int
+
+    After computing the facing squares of the pawn in x and y,
+    return the filtered list of the squares where, according to the rules, this
+    pawn can move.
+    """
+
+    return [
+        square
+        for square in pawn_facing_squares(board, player, x, y)
+        if square is not player
+    ]
+
+def move_direction(player):
+    """int -> int
+
+    Return the direction that player's pawns should be moving.
+    """
+
+    return 1 if player is 1 else -1
+
+def pawn_facing_squares(board, player, x, y):
+    """list (list int) -> int -> int -> int -> list int
+
+    Return the squares that faces a pawn located at x and y. The out of border
+    squares are automatically discarded.
+    """
+
+    return board[y + move_direction(player)][x-1:x+1]
