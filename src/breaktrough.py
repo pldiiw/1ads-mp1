@@ -1,13 +1,12 @@
+"""The Breaktrough game."""
+
+import sys
+
 def new_board(n, p):
     """int -> int -> list (list int)
 
-    Initialize a fresh new board of n rows and p columns where n > 4
-    (adjusted if too low) and returns it.
+    Initialize a fresh new board of n rows and p columns and returns it.
     """
-
-    # Raising number of rows if it does not match the rules
-    if not n > 4:
-        n = 5
 
     empty_board = [[0 for x in range(p)] for y in range(n)]
     first_player_pawns = [[1 for x in range(p)] for y in range(2)]
@@ -18,8 +17,8 @@ def new_board(n, p):
 def display_board(board, n, p):
     """list (list int) -> int -> int -> IO
 
-    Iterate the board and display each of its values replaced with
-    characters to make it prettier to the user.
+    Iterate the board and display each of its values as characters to make it
+    prettier to the user.
     """
 
     for y in board:
@@ -36,7 +35,7 @@ def display_board(board, n, p):
 def select_pawn(board, n, p, player):
     """list (list int) -> int -> int -> int -> int, int
 
-    Let the designated player choose a valid pawn to move and returns it.
+    Let the player choose a pawn that is able to move and returns it.
     """
 
     print("Choose the pawn you want to move.")
@@ -52,8 +51,8 @@ def select_pawn(board, n, p, player):
 def pawn_valid(board, n, p, player, x, y):
     """list (list int) -> int -> int > int -> int -> int -> bool
 
-    Given coordinates, I will check if there is a pawn there belonging to a
-    specified player and if it is able to move.
+    Given coordinates, I will check if there is a pawn there belonging to
+    player and if it is able to move.
     """
 
     # Return true if all rules are respected
@@ -65,7 +64,7 @@ def pawn_valid(board, n, p, player, x, y):
 def coordinates_within_board(board_height, board_width, x, y):
     """int -> int -> int -> int -> bool
 
-    Are the given coordinates inside the board ?
+    Are the given coordinates inside the board?
     """
 
     return x < board_width \
@@ -76,7 +75,7 @@ def coordinates_within_board(board_height, board_width, x, y):
 def pawn_exist(board, x, y):
     """list (list int) -> int -> int -> bool
 
-    Is there a pawn at these coordinates ?
+    Is there a pawn at these coordinates?
     """
 
     return board[y][x] is not 0
@@ -84,7 +83,7 @@ def pawn_exist(board, x, y):
 def pawn_belong_to_player(board, player, x, y):
     """list (list int) -> int -> int -> int -> bool
 
-    Does that pawn belongs to the player ?
+    Does that pawn belong to the player?
     """
 
     return board[y][x] is player
@@ -92,13 +91,13 @@ def pawn_belong_to_player(board, player, x, y):
 def pawn_can_move(board, player, x, y):
     """list (list int) -> int -> int -> int -> bool
 
-    Is the pawn able to move ?
+    Is the pawn able to move?
     """
 
     facing_squares = pawn_facing_squares(board, player, x, y)
     opponent = 1 if player is 2 else 1
 
-    # Return true if at least one of the square facing the pawn is nor a friend
+    # Return true if at least one of the square facing the pawn is not a friend
     # nor outside of the board
     return opponent in facing_squares \
            or 0 in facing_squares
@@ -135,14 +134,14 @@ def where_(board, player, x, y):
 def pawn_available_moves(board, player, x, y):
     """list (list int) -> int -> int -> int -> list int
 
-    After computing the facing squares of the pawn in x and y,
+    After computing the squares in front of the pawn in x and y,
     return the filtered list of the squares where, according to the rules, this
     pawn can move.
     """
 
     return [
-        square
-        for square in pawn_facing_squares(board, player, x, y)
+        index
+        for index, square in enumerate(pawn_facing_squares(board, player, x, y))
         if square is not player
     ]
 
@@ -158,7 +157,108 @@ def pawn_facing_squares(board, player, x, y):
     """list (list int) -> int -> int -> int -> list int
 
     Return the squares that faces a pawn located at x and y. The out of border
-    squares are automatically discarded.
+    squares are discarded.
     """
 
-    return board[y + move_direction(player)][x-1:x+1]
+    return board[y + move_direction(player)][(x-1 if x-1 > 0 else 0):x+2]
+
+def breaktrough(n, p):
+    """int -> int -> IO
+
+    This is the main procedure of the game.
+    """
+
+    # Raising number of rows if it does not match the rules
+    if not n > 4:
+        n = 5
+
+    # Greet the player(s)
+    greet()
+
+    # Now, initiate the first turn and the subsequent ones
+    winner = turn(new_board(n, p), n, p, 1) # 1 because whites start first
+
+    # Congratulate the winner
+    congrats(winner)
+
+    # Terminate the process
+    exit(0)
+
+def greet():
+    """IO -> IO
+
+    Welcome the player(s).
+    """
+
+    print("Welcome! Ready to play breaktrough? Go!")
+
+def turn(board, n, p, player):
+    """list (list int) -> int -> int -> int -> int
+
+    Resolve player's turn.
+    """
+
+    print("This is player " + str(player) + "'s turn.")
+    display_board(board, n, p)
+
+    x, y = select_pawn(board, n, p, player)
+    selected_column_to_move_to = where(board, n, p, player, x, y)
+    move_pawn(board, x, y, selected_column_to_move_to)
+
+    if someone_won(board):
+        # Display board one last time to show its final state
+        display_board(board, n, p)
+        return player
+    else:
+        return turn(board, n, p, 3-player)
+
+def move_pawn(board, x, y, dest_column):
+    """list (list int) -> int -> int -> int -> IO
+
+    Move the pawn located at x and y to dest_column in the direction it faces.
+    Lists love side-effects.
+    """
+
+    pawn = board[y][x]
+    board[y + move_direction(pawn)][dest_column] = pawn
+    board[y][x] = 0 # Empty the square where the pawn was located before moving
+
+def someone_won(board):
+    """list (list int) -> bool
+
+    Check if, according to the rules, one of the players won.
+    """
+
+    return (not still_has_pawns(board, 1)
+            or not still_has_pawns(board, 2)
+            or 2 in board[0] # Has a black pawn reached the white starting line?
+            or 1 in board[-1]) # Has a white pawn reached the black starting
+                               # line?
+
+def still_has_pawns(board, player):
+    """list (list int) -> int -> bool
+
+    Does player still have at least one pawn?
+    """
+
+    return player in flatten(board)
+
+def flatten(l):
+    """list (list *) -> list
+
+    Given a two dimensional list, return a one dimensional list being the
+    concatenation of all the element inside the original list.
+    """
+
+    return [x for y in l for x in y]
+
+def congrats(player):
+    """int -> IO
+
+    Felicitate player for winning the game.
+    """
+
+    print("Congratulations player " + str(player) + "! You have won this game!")
+
+if __name__ == "__main__":
+    breaktrough(int(sys.argv[1]), int(sys.argv[2]))
