@@ -139,7 +139,7 @@ def pawn_available_moves(board, board_width, player, x, y):
     rules, this pawn can move.
     """
 
-    facing_columns = pawn_facing_columns(board, board_width, player, x, y)
+    facing_columns = pawn_facing_columns(board_width, x)
     facing_squares = pawn_facing_squares(board, player, x, y)
 
     return [
@@ -165,8 +165,8 @@ def pawn_facing_squares(board, player, x, y):
 
     return board[y + move_direction(player)][(x-1 if x-1 > 0 else 0):x+2]
 
-def pawn_facing_columns(board, board_width, player, x, y):
-    """list (list int) -> int -> int -> int -> int -> list int
+def pawn_facing_columns(board_width, x):
+    """int -> int -> list int
 
     Return columns number that faces a pawn located at x and y.
     """

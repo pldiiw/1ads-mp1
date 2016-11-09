@@ -1,7 +1,7 @@
 import sys
-sys.path.append("../src")
-import breaktrough
 import unittest
+sys.path.append('..')
+from src import breaktrough
 
 class BreaktroughTests(unittest.TestCase):
     """All breaktrough testing methods.
@@ -92,34 +92,19 @@ class BreaktroughTests(unittest.TestCase):
             [0, 1, 1, 1, 2, 1, 0, 2, 0, 0, 0]
         ]
         self.assertEqual(
-            breaktrough.pawn_facing_columns(self.board, self.width, 2, 2, 3),
+            breaktrough.pawn_facing_columns(self.width, 2),
             [1, 2]
         )
         self.assertEqual(
-            breaktrough.pawn_facing_columns(long_board,
-                                            len(long_board[0]),
-                                            1,
-                                            8,
-                                            0
-            ),
+            breaktrough.pawn_facing_columns(len(long_board[0]), 8),
             [7, 8, 9]
         )
         self.assertEqual(
-            breaktrough.pawn_facing_columns(long_board,
-                                            len(long_board[0]),
-                                            1,
-                                            10,
-                                            0
-            ),
+            breaktrough.pawn_facing_columns(len(long_board[0]), 10),
             [9, 10]
         )
         self.assertEqual(
-            breaktrough.pawn_facing_columns(long_board,
-                                            len(long_board[0]),
-                                            1,
-                                            0,
-                                            0
-            ),
+            breaktrough.pawn_facing_columns(len(long_board[0]), 0),
             [0, 1]
         )
 
