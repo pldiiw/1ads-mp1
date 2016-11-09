@@ -110,11 +110,11 @@ def where(board, n, p, player, i, j):
     """
 
     print("Where do you want to move this pawn ?")
-    return where_(board, player, i, j)
+    return where_(board, p, player, i, j)
 
 
-def where_(board, player, x, y):
-    """list (list int) -> int -> int -> int -> int
+def where_(board, board_width, player, x, y):
+    """list (list int) -> int -> int -> int -> int -> int
 
     Let player choose to which column he wants to move the pawn present at
     x and y coordinates and return this number if it is valid,
@@ -122,27 +122,30 @@ def where_(board, player, x, y):
     Low level implementation of where function.
     """
 
-    available_moves = pawn_available_moves(board, player, x, y)
+    available_moves = pawn_available_moves(board, board_width, player, x, y)
     choice = int(input("Column number (" + str(available_moves)[1:-1] + "): "))
 
     if choice in available_moves:
         return choice
     else:
         print("You cannot move it there, please retry.")
-        return where_(board, player, x, y)
+        return where_(board, board_width, player, x, y)
 
-def pawn_available_moves(board, player, x, y):
-    """list (list int) -> int -> int -> int -> list int
+def pawn_available_moves(board, board_width, player, x, y):
+    """list (list int) -> int -> int -> int -> int -> list int
 
     After computing the squares in front of the pawn in x and y,
-    return the filtered list of the squares where, according to the rules, this
-    pawn can move.
+    return the filtered list of the columns numbers where, according to the
+    rules, this pawn can move.
     """
 
+    facing_columns = pawn_facing_columns(board, board_width, player, x, y)
+    facing_squares = pawn_facing_squares(board, player, x, y)
+
     return [
-        index
-        for index, square in enumerate(pawn_facing_squares(board, player, x, y))
-        if square is not player
+        square[0]
+        for square in zip(facing_columns, facing_squares)
+        if square[1] is not player
     ]
 
 def move_direction(player):
@@ -161,6 +164,18 @@ def pawn_facing_squares(board, player, x, y):
     """
 
     return board[y + move_direction(player)][(x-1 if x-1 > 0 else 0):x+2]
+
+def pawn_facing_columns(board, board_width, player, x, y):
+    """list (list int) -> int -> int -> int -> int -> list int
+
+    Return columns number that faces a pawn located at x and y.
+    """
+
+    return [
+        column
+        for column in [x-1, x, x+1]
+        if column >= 0 and column < board_width
+    ]
 
 def breaktrough(n, p):
     """int -> int -> IO
