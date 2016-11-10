@@ -1,12 +1,12 @@
 """The Breaktrough game."""
 
-import sys
+from typing import List, Any
 
-def new_board(n, p):
-    """int -> int -> list (list int)
+Row = List[int]
+Board = List[Row]
 
-    Initialize a fresh new board of n rows and p columns and returns it.
-    """
+def new_board(n: int, p: int) -> Board:
+    """Initialize a fresh new board of n rows and p columns and returns it."""
 
     empty_board = [[0 for x in range(p)] for y in range(n)]
     first_player_pawns = [[1 for x in range(p)] for y in range(2)]
@@ -14,10 +14,8 @@ def new_board(n, p):
 
     return first_player_pawns + empty_board[2:-2] + second_player_pawns
 
-def display_board(board, n, p):
-    """list (list int) -> int -> int -> IO
-
-    Iterate the board and display each of its values as characters to make it
+def display_board(board: Board, n: int, p: int):
+    """Iterate the board and display each of its values as characters to make it
     prettier to the user.
     """
 
@@ -32,11 +30,8 @@ def display_board(board, n, p):
         # Do not forget to carriage return !
         print()
 
-def select_pawn(board, n, p, player):
-    """list (list int) -> int -> int -> int -> int, int
-
-    Let the player choose a pawn that is able to move and returns it.
-    """
+def select_pawn(board: Board, n: int, p: int, player: int) -> (int, int):
+    """Let the player choose a pawn that is able to move and returns it."""
 
     print("Choose the pawn you want to move.")
     x = int(input("Its x coordinates: "))
@@ -48,64 +43,50 @@ def select_pawn(board, n, p, player):
         print("These coordinates are invalid, please retry.")
         return select_pawn(board, n, p, player)
 
-def pawn_valid(board, n, p, player, x, y):
-    """list (list int) -> int -> int > int -> int -> int -> bool
-
-    Given coordinates, I will check if there is a pawn there belonging to
+def pawn_valid(board: Board, n: int, p: int, player: int, x: int,
+               y: int) -> bool:
+    """Given coordinates, I will check if there is a pawn there belonging to
     player and if it is able to move.
     """
 
     # Return true if all rules are respected
-    return coordinates_within_board(n, p, x, y) \
-           and pawn_exist(board, x, y) \
-           and pawn_belong_to_player(board, player, x, y) \
-           and pawn_can_move(board, player, x, y)
+    return (coordinates_within_board(n, p, x, y) and
+            pawn_exist(board, x, y) and
+            pawn_belong_to_player(board, player, x, y) and
+            pawn_can_move(board, player, x, y))
 
-def coordinates_within_board(board_height, board_width, x, y):
-    """int -> int -> int -> int -> bool
+def coordinates_within_board(board_height: int, board_width: int, x: int,
+                             y: int) -> bool:
+    """Are the given coordinates inside the board?"""
 
-    Are the given coordinates inside the board?
-    """
+    return (x < board_width and
+            y < board_height and
+            x >= 0 and
+            y >= 0)
 
-    return x < board_width \
-           and y < board_height \
-           and x >= 0 \
-           and y >= 0
-
-def pawn_exist(board, x, y):
-    """list (list int) -> int -> int -> bool
-
-    Is there a pawn at these coordinates?
-    """
+def pawn_exist(board: Board, x: int, y: int) -> bool:
+    """Is there a pawn at these coordinates?"""
 
     return board[y][x] is not 0
 
-def pawn_belong_to_player(board, player, x, y):
-    """list (list int) -> int -> int -> int -> bool
-
-    Does that pawn belong to the player?
-    """
+def pawn_belong_to_player(board: Board, player: int, x: int, y: int) -> bool:
+    """Does that pawn belong to the player?"""
 
     return board[y][x] is player
 
-def pawn_can_move(board, player, x, y):
-    """list (list int) -> int -> int -> int -> bool
-
-    Is the pawn able to move?
-    """
+def pawn_can_move(board: Board, player: int, x: int, y: int) -> bool:
+    """Is the pawn able to move?"""
 
     facing_squares = pawn_facing_squares(board, player, x, y)
     opponent = 1 if player is 2 else 1
 
     # Return true if at least one of the square facing the pawn is not a friend
     # nor outside of the board
-    return opponent in facing_squares \
-           or 0 in facing_squares
+    return (opponent in facing_squares or
+            0 in facing_squares)
 
-def where(board, n, p, player, i, j):
-    """list (list int) -> int -> int -> int -> int -> int -> int
-
-    Ask player where he wants to move the pawn located at i and j.
+def where(board: Board, n: int, p: int, player: int, i: int, j: int) -> int:
+    """Ask player where he wants to move the pawn located at i and j.
     High level implementation.
     """
 
@@ -113,12 +94,10 @@ def where(board, n, p, player, i, j):
     return where_(board, p, player, i, j)
 
 
-def where_(board, board_width, player, x, y):
-    """list (list int) -> int -> int -> int -> int -> int
-
-    Let player choose to which column he wants to move the pawn present at
-    x and y coordinates and return this number if it is valid,
-    otherwise re-ask him by re-calling the function.
+def where_(board: Board, board_width: int, player: int, x: int, y: int) -> int:
+    """Let player choose to which column he wants to move the pawn present at
+    x and y coordinates and return this number if it is valid, otherwise re-ask
+    him by re-calling the function.
     Low level implementation of where function.
     """
 
@@ -131,12 +110,11 @@ def where_(board, board_width, player, x, y):
         print("You cannot move it there, please retry.")
         return where_(board, board_width, player, x, y)
 
-def pawn_available_moves(board, board_width, player, x, y):
-    """list (list int) -> int -> int -> int -> int -> list int
-
-    After computing the squares in front of the pawn in x and y,
-    return the filtered list of the columns numbers where, according to the
-    rules, this pawn can move.
+def pawn_available_moves(board: Board, board_width: int, player: int, x: int,
+                         y: int) -> Row:
+    """After computing the squares in front of the pawn in x and y, return the
+    filtered list of the columns numbers where, according to the rules, this
+    pawn can move.
     """
 
     facing_columns = pawn_facing_columns(board_width, x)
@@ -148,28 +126,20 @@ def pawn_available_moves(board, board_width, player, x, y):
         if square[1] is not player
     ]
 
-def move_direction(player):
-    """int -> int
-
-    Return the direction that player's pawns should be moving.
-    """
+def move_direction(player: int) -> int:
+    """Return the direction that player's pawns should be moving."""
 
     return 1 if player is 1 else -1
 
-def pawn_facing_squares(board, player, x, y):
-    """list (list int) -> int -> int -> int -> list int
-
-    Return the squares that faces a pawn located at x and y. The out of border
-    squares are discarded.
+def pawn_facing_squares(board: Board, player: int, x: int, y: int) -> Row:
+    """Return the squares that faces a pawn located at x and y. The out of
+    border squares are discarded.
     """
 
     return board[y + move_direction(player)][(x-1 if x-1 > 0 else 0):x+2]
 
-def pawn_facing_columns(board_width, x):
-    """int -> int -> list int
-
-    Return columns number that faces a pawn located at x and y.
-    """
+def pawn_facing_columns(board_width: int, x: int) -> Row:
+    """Return columns number that faces a pawn located at x and y."""
 
     return [
         column
@@ -177,11 +147,8 @@ def pawn_facing_columns(board_width, x):
         if column >= 0 and column < board_width
     ]
 
-def breaktrough(n, p):
-    """int -> int -> IO
-
-    This is the main procedure of the game.
-    """
+def breaktrough(n: int, p: int):
+    """This is the main procedure of the game."""
 
     # Raising number of rows if it does not match the rules
     if not n > 4:
@@ -200,18 +167,12 @@ def breaktrough(n, p):
     exit(0)
 
 def greet():
-    """IO -> IO
-
-    Welcome the player(s).
-    """
+    """Welcome the player(s)."""
 
     print("Welcome! Ready to play breaktrough? Go!")
 
-def turn(board, n, p, player):
-    """list (list int) -> int -> int -> int -> int
-
-    Resolve player's turn.
-    """
+def turn(board: Board, n: int, p: int, player: int) -> int:
+    """Resolve player's turn."""
 
     print("This is player " + str(player) + "'s turn.")
     display_board(board, n, p)
@@ -225,12 +186,12 @@ def turn(board, n, p, player):
         display_board(board, n, p)
         return player
     else:
-        return turn(board, n, p, 3-player)
+        opponent = 3 - player
+        return turn(board, n, p, opponent)
 
-def move_pawn(board, x, y, dest_column):
-    """list (list int) -> int -> int -> int -> IO
-
-    Move the pawn located at x and y to dest_column in the direction it faces.
+def move_pawn(board: Board, x: int, y: int, dest_column: int):
+    """Move the pawn located at x and y to dest_column in the direction it
+    faces.
     Lists love side-effects.
     """
 
@@ -238,42 +199,31 @@ def move_pawn(board, x, y, dest_column):
     board[y + move_direction(pawn)][dest_column] = pawn
     board[y][x] = 0 # Empty the square where the pawn was located before moving
 
-def someone_won(board):
-    """list (list int) -> bool
+def someone_won(board: Board) -> bool:
+    """Check if, according to the rules, one of the players won."""
 
-    Check if, according to the rules, one of the players won.
-    """
+    return (not still_has_pawns(board, 1) or
+            not still_has_pawns(board, 2) or
+            2 in board[0] or # Has a black pawn reached the white starting line?
+            1 in board[-1]) # Has a white pawn reached the black starting line?
 
-    return (not still_has_pawns(board, 1)
-            or not still_has_pawns(board, 2)
-            or 2 in board[0] # Has a black pawn reached the white starting line?
-            or 1 in board[-1]) # Has a white pawn reached the black starting
-                               # line?
-
-def still_has_pawns(board, player):
-    """list (list int) -> int -> bool
-
-    Does player still have at least one pawn?
-    """
+def still_has_pawns(board: Board, player: int) -> bool:
+    """Does player still have at least one pawn?"""
 
     return player in flatten(board)
 
-def flatten(l):
-    """list (list *) -> list
-
-    Given a two dimensional list, return a one dimensional list being the
+def flatten(l: List[List[Any]]) -> List[Any]:
+    """Given a two dimensional list, return a one dimensional list being the
     concatenation of all the element inside the original list.
     """
 
     return [x for y in l for x in y]
 
-def congrats(player):
-    """int -> IO
-
-    Felicitate player for winning the game.
-    """
+def congrats(player: int):
+    """Felicitate player for winning the game."""
 
     print("Congratulations player " + str(player) + "! You have won this game!")
 
 if __name__ == "__main__":
-    breaktrough(int(sys.argv[1]), int(sys.argv[2]))
+    from sys import argv
+    breaktrough(int(argv[1]), int(argv[2]))
