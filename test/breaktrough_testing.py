@@ -75,15 +75,15 @@ class BreaktroughTests(unittest.TestCase):
 
     def test_pawn_facing_squares(self):
         self.assertEqual(
-            breaktrough.pawn_facing_squares(self.board, 1, 2, 1),
+            breaktrough.pawn_facing_squares(self.board, self.height, 1, 2, 1),
             [0, 0]
         )
         self.assertEqual(
-            breaktrough.pawn_facing_squares(self.board, 2, 1, 3),
+            breaktrough.pawn_facing_squares(self.board, self.height, 2, 1, 3),
             [0, 0, 0]
         )
         self.assertEqual(
-            breaktrough.pawn_facing_squares(self.board, 2, 0, 4),
+            breaktrough.pawn_facing_squares(self.board, self.height, 2, 0, 4),
             [2, 2]
         )
 
@@ -112,13 +112,13 @@ class BreaktroughTests(unittest.TestCase):
 
     def test_pawn_can_move(self):
         self.assertTrue(
-            breaktrough.pawn_can_move(self.board, 1, 0, 1)
+            breaktrough.pawn_can_move(self.board, self.height, 1, 0, 1)
         )
         self.assertTrue(
-            breaktrough.pawn_can_move(self.board, 2, 3, 2)
+            breaktrough.pawn_can_move(self.board, self.height, 2, 3, 2)
         )
         self.assertFalse(
-            breaktrough.pawn_can_move(self.board, 2, 4, 1)
+            breaktrough.pawn_can_move(self.board, self.height, 2, 4, 1)
         )
 
     def test_pawn_available_moves(self):
@@ -128,6 +128,7 @@ class BreaktroughTests(unittest.TestCase):
         ]
         self.assertEqual(
             breaktrough.pawn_available_moves(long_board,
+                                             len(long_board),
                                              len(long_board[0]),
                                              1,
                                              10,
@@ -137,6 +138,7 @@ class BreaktroughTests(unittest.TestCase):
         )
         self.assertEqual(
             breaktrough.pawn_available_moves(long_board,
+                                             len(long_board),
                                              len(long_board[0]),
                                              2,
                                              7,
@@ -146,6 +148,7 @@ class BreaktroughTests(unittest.TestCase):
         )
         self.assertEqual(
             breaktrough.pawn_available_moves(long_board,
+                                             len(long_board),
                                              len(long_board[0]),
                                              1,
                                              2,
