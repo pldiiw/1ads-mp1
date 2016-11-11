@@ -1,7 +1,7 @@
 """The Breaktrough game."""
 
 from sys import argv
-from typing import List, Any
+from typing import List, Any, Tuple
 from random import choice
 
 Row = List[int]
@@ -32,7 +32,7 @@ def display_board(board: Board, n: int, p: int):
         # Do not forget to carriage return !
         print()
 
-def select_pawn(board: Board, n: int, p: int, player: int) -> (int, int):
+def select_pawn(board: Board, n: int, p: int, player: int) -> Tuple[int, int]:
     """Let the player choose a pawn that is able to move and returns it."""
 
     print("Choose the pawn you want to move.")
@@ -271,7 +271,7 @@ def opponent_turn(board: Board, board_height: int, board_width: int,
         return turn(board, board_height, board_width, opponent)
 
 def select_random_pawn(board: Board, board_height: int, board_width: int,
-                       player: int) -> (int, int):
+                       player: int) -> Tuple[int, int]:
     """Select a random pawn owned by player and able to move and return its
     coordinates.
     """
