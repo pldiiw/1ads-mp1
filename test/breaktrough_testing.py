@@ -1,13 +1,12 @@
 """Breaktrough testing unit."""
 
-import sys
+from sys import path
 import unittest
-sys.path.append('..')
+path.append('..')
 from src import breaktrough
 
 class BreaktroughTests(unittest.TestCase):
-    """All breaktrough testing methods.
-    """
+    """All Breaktrough testing methods."""
 
     def setUp(self):
         self.width = 3

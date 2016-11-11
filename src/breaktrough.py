@@ -24,11 +24,11 @@ def display_board(board: Board, n: int, p: int):
     for row in board:
         for square in row:
             if square is 0:
-                print('.', end='')
+                print('.', end=' ')
             elif square is 1:
-                print('x', end='')
+                print('x', end=' ')
             else:
-                print('o', end='')
+                print('o', end=' ')
         # Do not forget to carriage return !
         print()
 
