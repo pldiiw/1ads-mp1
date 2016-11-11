@@ -1,3 +1,5 @@
+"""Breaktrough testing unit."""
+
 import sys
 import unittest
 sys.path.append('..')
@@ -21,8 +23,7 @@ class BreaktroughTests(unittest.TestCase):
     def test_new_board(self):
         self.assertEqual(
             breaktrough.new_board(self.height, self.width),
-            self.board
-        )
+            self.board)
 
     def test_coordinates_within_board(self):
         # Inside board
@@ -111,7 +112,7 @@ class BreaktroughTests(unittest.TestCase):
 
     def test_pawn_can_move(self):
         self.assertTrue(
-            breaktrough.pawn_can_move(self.board, 1, 1, 0)
+            breaktrough.pawn_can_move(self.board, 1, 0, 1)
         )
         self.assertTrue(
             breaktrough.pawn_can_move(self.board, 2, 3, 2)
@@ -131,7 +132,7 @@ class BreaktroughTests(unittest.TestCase):
                                              1,
                                              10,
                                              0
-            ),
+                                            ),
             [9, 10]
         )
         self.assertEqual(
@@ -140,7 +141,7 @@ class BreaktroughTests(unittest.TestCase):
                                              2,
                                              7,
                                              1
-            ),
+                                            ),
             [6, 7, 8]
         )
         self.assertEqual(
@@ -149,7 +150,7 @@ class BreaktroughTests(unittest.TestCase):
                                              1,
                                              2,
                                              0
-            ),
+                                            ),
             []
         )
 
@@ -237,6 +238,62 @@ class BreaktroughTests(unittest.TestCase):
         )
         self.assertFalse(
             breaktrough.someone_won(self.board)
+        )
+
+    def test_select_random_pawn(self):
+        white_unique_choice = [
+            [0, 1, 1],
+            [0, 1, 1],
+            [1, 1, 1]
+        ]
+        black_unique_choice = [
+            [2, 2, 2],
+            [2, 0, 2],
+            [0, 0, 2]
+        ]
+        self.assertTrue(
+            breaktrough.select_random_pawn(white_unique_choice,
+                                           len(white_unique_choice),
+                                           len(white_unique_choice[0]),
+                                           1
+                                          ),
+            (1, 0)
+        )
+        self.assertTrue(
+            breaktrough.select_random_pawn(black_unique_choice,
+                                           len(black_unique_choice),
+                                           len(black_unique_choice[0]),
+                                           2
+                                          ),
+            (2, 2)
+        )
+
+    def test_ai_turn(self):
+        black_line_reach = [
+            [1, 1, 1],
+            [2, 2, 2],
+            [2, 2, 2]
+        ]
+        white_supremacy = [
+            [1],
+            [2],
+            [0]
+        ]
+        self.assertTrue(
+            breaktrough.ai_turn(black_line_reach,
+                                len(black_line_reach),
+                                len(black_line_reach[0]),
+                                2
+                               ),
+            2
+        )
+        self.assertTrue(
+            breaktrough.ai_turn(white_supremacy,
+                                len(white_supremacy),
+                                len(white_supremacy[0]),
+                                1
+                               ),
+            1
         )
 
 if __name__ == "__main__":

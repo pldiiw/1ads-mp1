@@ -298,7 +298,7 @@ argument-name-hint=[a-z_][a-z0-9_]{0,30}$
 
 # Regular expression which should only match function or class names that do
 # not require a docstring.
-no-docstring-rgx=^_
+no-docstring-rgx=
 
 # Minimum line length for functions/classes that require docstrings, shorter
 # ones are exempt.
