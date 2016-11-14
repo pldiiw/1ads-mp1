@@ -16,7 +16,7 @@ def new_board(n: int, p: int) -> Board:
 
     return first_player_pawns + empty_board[2:-2] + second_player_pawns
 
-def display_board(board: Board, n: int, p: int):
+def display(board: Board) -> None:
     """Iterate the board and display each of its values as characters to make it
     prettier to the user.
     """
@@ -57,14 +57,10 @@ def pawn_valid(board: Board, n: int, p: int, player: int, x: int,
             pawn_belong_to_player(board, player, x, y) and
             pawn_can_move(board, n, player, x, y))
 
-def coordinates_within_board(board_height: int, board_width: int, x: int,
-                             y: int) -> bool:
+def coordinates_within_board(n: int, p: int, x: int, y: int) -> bool:
     """Are the given coordinates inside the board?"""
 
-    return (x < board_width and
-            y < board_height and
-            x >= 0 and
-            y >= 0)
+    return y < n and x < p and x >= 0 and y >= 0
 
 def pawn_exist(board: Board, x: int, y: int) -> bool:
     """Is there a pawn at these coordinates?"""
@@ -76,17 +72,34 @@ def pawn_belong_to_player(board: Board, player: int, x: int, y: int) -> bool:
 
     return board[y][x] is player
 
-def pawn_can_move(board: Board, board_height: int, player: int, x: int,
+def pawn_can_move(board: Board, n: int, player: int, x: int,
                   y: int) -> bool:
     """Is the pawn able to move?"""
 
-    facing_squares = pawn_facing_squares(board, board_height, player, x, y)
+    facing_squares = pawn_facing_squares(board, n, player, x, y)
     opponent = 3 - player
 
     # Return true if at least one of the square facing the pawn is not a friend
     # nor outside of the board
     return (opponent in facing_squares or
             0 in facing_squares)
+
+def pawn_facing_squares(board: Board, n: int, player: int, x: int,
+                        y: int) -> Row:
+    """Return the squares that faces a pawn located at x and y. The out of
+    border squares are discarded.
+    """
+
+    # If pawn is not on an horizontal edge of board
+    if player is 1 and y != n-1 or player is 2 and y != 0:
+        return board[y + move_direction(player)][(x-1 if x-1 > 0 else 0):x+2]
+    else:
+        return []
+
+def move_direction(player: int) -> int:
+    """Return the direction that player's pawns should be moving."""
+
+    return 1 if player is 1 else -1
 
 def where(board: Board, n: int, p: int, player: int, i: int, j: int) -> int:
     """Ask player where he wants to move the pawn located at i and j.
@@ -96,34 +109,31 @@ def where(board: Board, n: int, p: int, player: int, i: int, j: int) -> int:
     print("Where do you want to move this pawn ?")
     return where_(board, n, p, player, i, j)
 
-
-def where_(board: Board, board_height: int, board_width: int, player: int,
-           x: int, y: int) -> int:
+def where_(board: Board, n: int, p: int, player: int, x: int, y: int) -> int:
     """Let player choose to which column he wants to move the pawn present at
     x and y coordinates and return this number if it is valid, otherwise re-ask
     him by re-calling the function.
     Low level implementation of where function.
     """
 
-    available_moves = pawn_available_moves(board, board_height, board_width,
-                                           player, x, y)
+    available_moves = pawn_available_moves(board, n, p, player, x, y)
     pick = int(input("Column number (" + str(available_moves)[1:-1] + "): "))
 
     if pick in available_moves:
         return pick
     else:
         print("You cannot move it there, please retry.")
-        return where_(board, board_height, board_width, player, x, y)
+        return where_(board, n, p, player, x, y)
 
-def pawn_available_moves(board: Board, board_height: int, board_width: int,
-                         player: int, x: int, y: int) -> Row:
+def pawn_available_moves(board: Board, n: int, p: int, player: int, x: int,
+                         y: int) -> Row:
     """After computing the squares in front of the pawn in x and y, return the
     filtered list of the columns numbers where, according to the rules, this
     pawn can move.
     """
 
-    facing_columns = pawn_facing_columns(board_width, x)
-    facing_squares = pawn_facing_squares(board, board_height, player, x, y)
+    facing_columns = pawn_facing_columns(p, x)
+    facing_squares = pawn_facing_squares(board, n, player, x, y)
 
     return [
         square[0]
@@ -131,30 +141,13 @@ def pawn_available_moves(board: Board, board_height: int, board_width: int,
         if square[1] is not player
     ]
 
-def move_direction(player: int) -> int:
-    """Return the direction that player's pawns should be moving."""
-
-    return 1 if player is 1 else -1
-
-def pawn_facing_squares(board: Board, board_height: int, player: int, x: int,
-                        y: int) -> Row:
-    """Return the squares that faces a pawn located at x and y. The out of
-    border squares are discarded.
-    """
-
-    # If pawn is not on an horizontal edge of board
-    if player is 1 and y != board_height-1 or player is 2 and y != 0:
-        return board[y + move_direction(player)][(x-1 if x-1 > 0 else 0):x+2]
-    else:
-        return []
-
-def pawn_facing_columns(board_width: int, x: int) -> Row:
+def pawn_facing_columns(p: int, x: int) -> Row:
     """Return columns indexes that faces a pawn located at x and y."""
 
     return [
         column
         for column in [x-1, x, x+1]
-        if column >= 0 and column < board_width
+        if column >= 0 and column < p
     ]
 
 def breaktrough(n: int, p: int):
@@ -168,7 +161,7 @@ def breaktrough(n: int, p: int):
     greet()
 
     # Now, initiate the first turn and the subsequent ones
-    winner = opponent_turn(new_board(n, p), n, p, 2)
+    winner = turn(new_board(n, p), n, p)
 
     # Congratulate the winner
     congrats(winner)
@@ -176,25 +169,59 @@ def breaktrough(n: int, p: int):
     # Terminate the process
     exit(0)
 
-def greet():
+def greet() -> None:
     """Welcome the player(s)."""
 
     print("Welcome! Ready to play breaktrough? Go!")
 
-def turn(board: Board, n: int, p: int, player: int) -> int:
-    """Resolve player's turn."""
+def congrats(player: int) -> None:
+    """Felicitate player for winning the game."""
+
+    print("Congratulations player " + str(player) + "! You have won this game!")
+
+def turn(board: Board, n: int, p: int, _round: int = 1) -> int:
+    """Compute a turn."""
+
+    player = 2 - _round % 2
 
     print("This is player " + str(player) + "'s turn.")
-    display_board(board, n, p)
+    display(board)
+
+    if int(argv[3]) is player:
+        ai_turn(board, n, p, player)
+    else:
+        player_turn(board, n, p, player)
+
+    if not someone_won(board):
+        return turn(board, n, p, _round+1)
+    else:
+        display(board)
+        return player
+
+def player_turn(board: Board, n: int, p: int, player: int) -> None:
+    """Resolve player's turn."""
 
     x, y = select_pawn(board, n, p, player)
     selected_column_to_move_to = where(board, n, p, player, x, y)
 
     move_pawn(board, x, y, selected_column_to_move_to)
 
-    return opponent_turn(board, n, p, player)
+def ai_turn(board: Board, n: int, p: int, player: int) -> None:
+    """Process AI's turn. The IA solely chooses a random pawn and moves it in a
+    random square in front of it.
+    """
 
-def move_pawn(board: Board, x: int, y: int, dest_column: int):
+    print("(AI's turn.)")
+
+    x, y = select_random_pawn(board, n, p, player)
+    pawn_dest_column = choice(pawn_available_moves(board, n, p, player, x, y))
+
+    print("Move pawn [", x, ";", y, "] to [", pawn_dest_column, ";",
+          y+move_direction(player), "]")
+
+    move_pawn(board, x, y, pawn_dest_column)
+
+def move_pawn(board: Board, x: int, y: int, dest_column: int) -> None:
     """Move the pawn located at x and y to dest_column in the direction it
     faces.
     Lists love side-effects.
@@ -203,6 +230,20 @@ def move_pawn(board: Board, x: int, y: int, dest_column: int):
     pawn = board[y][x]
     board[y + move_direction(pawn)][dest_column] = pawn
     board[y][x] = 0 # Empty the square where the pawn was located before moving
+
+
+def select_random_pawn(board: Board, n: int, p: int,
+                       player: int) -> Tuple[int, int]:
+    """Select a random pawn owned by player and able to move and return its
+    coordinates.
+    """
+
+    return choice([
+        (x, y)
+        for y, row in enumerate(board)
+        for x, _ in enumerate(row)
+        if pawn_valid(board, n, p, player, x, y)
+    ])
 
 def someone_won(board: Board) -> bool:
     """Check if, according to the rules, one of the players won."""
@@ -223,69 +264,6 @@ def flatten(l: List[List[Any]]) -> List[Any]:
     """
 
     return [x for y in l for x in y]
-
-def congrats(player: int):
-    """Felicitate player for winning the game."""
-
-    print("Congratulations player " + str(player) + "! You have won this game!")
-
-def ai_turn(board: Board, board_height: int, board_width: int,
-            player: int) -> int:
-    """Process AI's turn. The IA solely chooses a random pawn and moves it in a
-    random square in front of it.
-    """
-
-    print("This is player" + str(player) + "'s turn (AI).")
-
-    pawn_to_move_x, pawn_to_move_y = select_random_pawn(board,
-                                                        board_height,
-                                                        board_width,
-                                                        player)
-    pawn_dest_column = choice(pawn_available_moves(board,
-                                                   board_height,
-                                                   board_width,
-                                                   player,
-                                                   pawn_to_move_x,
-                                                   pawn_to_move_y))
-
-    print("Move pawn [", pawn_to_move_x, ";", pawn_to_move_y, "] to [",
-          pawn_dest_column, ";", pawn_to_move_y+move_direction(player), "]")
-
-    move_pawn(board, pawn_to_move_x, pawn_to_move_y, pawn_dest_column)
-
-    return opponent_turn(board, board_height, board_width, player)
-
-def opponent_turn(board: Board, board_height: int, board_width: int,
-                  player: int) -> int:
-    """Call opponent's turn."""
-
-    opponent = 3 - player
-
-    if someone_won(board):
-        # Display board one last time to show its final state
-        display_board(board, board_height, board_width)
-        return player
-    elif int(argv[3]) is opponent:
-        return ai_turn(board, board_height, board_width, opponent)
-    else:
-        return turn(board, board_height, board_width, opponent)
-
-def select_random_pawn(board: Board, board_height: int, board_width: int,
-                       player: int) -> Tuple[int, int]:
-    """Select a random pawn owned by player and able to move and return its
-    coordinates.
-    """
-
-    pawns_to_choose_from = [(x, y)
-                            for y, row in enumerate(board)
-                            for x, _ in enumerate(row)
-                            if pawn_valid(board,
-                                          board_height,
-                                          board_width,
-                                          player, x, y)
-                           ]
-
-    return choice(pawns_to_choose_from)
 
 if __name__ == "__main__":
     # argv[1]: board height

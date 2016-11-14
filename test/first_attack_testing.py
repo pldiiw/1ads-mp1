@@ -49,17 +49,15 @@ class FirstAttackTests(unittest.TestCase):
         ]
 
         argv[2] = '0'
-        self.assertTrue(first_attack.not_finish(self.board, self.n))
-        self.assertFalse(first_attack.not_finish(unplayable_board, 3))
-        self.assertTrue(first_attack.not_finish(self.ingame_board, self.n))
+        self.assertTrue(first_attack.not_finish(self.board))
+        self.assertFalse(first_attack.not_finish(unplayable_board))
+        self.assertTrue(first_attack.not_finish(self.ingame_board))
 
         argv[2] = '1'
-        self.assertTrue(first_attack.not_finish(self.bicolor_ingame_board,
-                                                self.n))
-        self.assertFalse(first_attack.not_finish(bicolor_unplayable_board, 3))
+        self.assertTrue(first_attack.not_finish(self.bicolor_ingame_board))
+        self.assertFalse(first_attack.not_finish(bicolor_unplayable_board))
 
     def test_square_valid(self):
-
         argv[2] = '0'
         self.assertTrue(first_attack.square_valid(self.ingame_board,
                                                   self.n, 1, 4, 0))
@@ -95,12 +93,12 @@ class FirstAttackTests(unittest.TestCase):
         bicolor_board_to_update = deepcopy(self.board)
 
         argv[2] = '0'
-        first_attack.update(board_to_update, 5, 1, 1, 1)
+        first_attack.update(board_to_update, 1, 1, 1)
         self.assertEqual(board_to_update, self.ingame_board)
 
         argv[2] = '1'
-        first_attack.update(bicolor_board_to_update, 5, 1, 4, 0)
-        first_attack.update(bicolor_board_to_update, 5, 3, 0, 1)
+        first_attack.update(bicolor_board_to_update, 1, 4, 0)
+        first_attack.update(bicolor_board_to_update, 3, 0, 1)
         self.assertEqual(bicolor_board_to_update, self.bicolor_ingame_board)
 
 if __name__ == "__main__":

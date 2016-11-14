@@ -9,8 +9,8 @@ class BreaktroughTests(unittest.TestCase):
     """All Breaktrough testing methods."""
 
     def setUp(self):
-        self.width = 3
-        self.height = 5
+        self.p = 3
+        self.n = 5
         self.board = [
             [1, 1, 1],
             [1, 1, 1],
@@ -21,23 +21,24 @@ class BreaktroughTests(unittest.TestCase):
 
     def test_new_board(self):
         self.assertEqual(
-            breaktrough.new_board(self.height, self.width),
-            self.board)
+            breaktrough.new_board(self.n, self.p),
+            self.board
+        )
 
     def test_coordinates_within_board(self):
         # Inside board
         self.assertTrue(
-            breaktrough.coordinates_within_board(self.height, self.width, 1, 3)
+            breaktrough.coordinates_within_board(self.n, self.p, 1, 3)
         )
         # Outside board
         self.assertFalse(
-            breaktrough.coordinates_within_board(self.height, self.width, 5, 0)
+            breaktrough.coordinates_within_board(self.n, self.p, 5, 0)
         )
         self.assertFalse(
-            breaktrough.coordinates_within_board(self.height, self.width, 0, 8)
+            breaktrough.coordinates_within_board(self.n, self.p, 0, 8)
         )
         self.assertFalse(
-            breaktrough.coordinates_within_board(self.height, self.width, -2, 6)
+            breaktrough.coordinates_within_board(self.n, self.p, -2, 6)
         )
 
     def test_pawn_exist(self):
@@ -74,15 +75,15 @@ class BreaktroughTests(unittest.TestCase):
 
     def test_pawn_facing_squares(self):
         self.assertEqual(
-            breaktrough.pawn_facing_squares(self.board, self.height, 1, 2, 1),
+            breaktrough.pawn_facing_squares(self.board, self.n, 1, 2, 1),
             [0, 0]
         )
         self.assertEqual(
-            breaktrough.pawn_facing_squares(self.board, self.height, 2, 1, 3),
+            breaktrough.pawn_facing_squares(self.board, self.n, 2, 1, 3),
             [0, 0, 0]
         )
         self.assertEqual(
-            breaktrough.pawn_facing_squares(self.board, self.height, 2, 0, 4),
+            breaktrough.pawn_facing_squares(self.board, self.n, 2, 0, 4),
             [2, 2]
         )
 
@@ -91,8 +92,9 @@ class BreaktroughTests(unittest.TestCase):
             [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1],
             [0, 1, 1, 1, 2, 1, 0, 2, 0, 0, 0]
         ]
+
         self.assertEqual(
-            breaktrough.pawn_facing_columns(self.width, 2),
+            breaktrough.pawn_facing_columns(self.p, 2),
             [1, 2]
         )
         self.assertEqual(
@@ -108,16 +110,15 @@ class BreaktroughTests(unittest.TestCase):
             [0, 1]
         )
 
-
     def test_pawn_can_move(self):
         self.assertTrue(
-            breaktrough.pawn_can_move(self.board, self.height, 1, 0, 1)
+            breaktrough.pawn_can_move(self.board, self.n, 1, 0, 1)
         )
         self.assertTrue(
-            breaktrough.pawn_can_move(self.board, self.height, 2, 3, 2)
+            breaktrough.pawn_can_move(self.board, self.n, 2, 3, 2)
         )
         self.assertFalse(
-            breaktrough.pawn_can_move(self.board, self.height, 2, 4, 1)
+            breaktrough.pawn_can_move(self.board, self.n, 2, 4, 1)
         )
 
     def test_pawn_available_moves(self):
@@ -125,6 +126,7 @@ class BreaktroughTests(unittest.TestCase):
             [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1],
             [0, 1, 1, 1, 2, 1, 0, 2, 0, 0, 0]
         ]
+
         self.assertEqual(
             breaktrough.pawn_available_moves(long_board,
                                              len(long_board),
@@ -165,6 +167,7 @@ class BreaktroughTests(unittest.TestCase):
             [0, 0],
             [1, 0]
         ]
+
         breaktrough.move_pawn(board, 0, 0, 0)
         self.assertEqual(board, board_after)
 
@@ -176,6 +179,7 @@ class BreaktroughTests(unittest.TestCase):
             [10]
         ]
         one_dim_l = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
         self.assertEqual(
             breaktrough.flatten(two_dim_l),
             one_dim_l
@@ -192,6 +196,7 @@ class BreaktroughTests(unittest.TestCase):
             [0, 2],
             [0, 2]
         ]
+
         self.assertFalse(
             breaktrough.still_has_pawns(no_black, 2)
         )
@@ -253,6 +258,7 @@ class BreaktroughTests(unittest.TestCase):
             [2, 0, 2],
             [0, 0, 2]
         ]
+
         self.assertTrue(
             breaktrough.select_random_pawn(white_unique_choice,
                                            len(white_unique_choice),
@@ -281,22 +287,20 @@ class BreaktroughTests(unittest.TestCase):
             [2],
             [0]
         ]
-        self.assertTrue(
-            breaktrough.ai_turn(black_line_reach,
-                                len(black_line_reach),
-                                len(black_line_reach[0]),
-                                2
-                               ),
-            2
-        )
-        self.assertTrue(
-            breaktrough.ai_turn(white_supremacy,
-                                len(white_supremacy),
-                                len(white_supremacy[0]),
-                                1
-                               ),
-            1
-        )
+
+        breaktrough.ai_turn(black_line_reach,
+                            len(black_line_reach),
+                            len(black_line_reach[0]),
+                            2
+                           )
+        self.assertTrue(breaktrough.someone_won(black_line_reach))
+
+        breaktrough.ai_turn(white_supremacy,
+                            len(white_supremacy),
+                            len(white_supremacy[0]),
+                            1
+                           )
+        self.assertTrue(breaktrough.someone_won(white_supremacy))
 
 if __name__ == "__main__":
     unittest.main()

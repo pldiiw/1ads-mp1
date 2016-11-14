@@ -11,7 +11,7 @@ def new_board(n: int) -> Board:
 
     return [[0 for _ in range(n)] for _ in range(n)]
 
-def display(board: Board, n: int) -> None:
+def display(board: Board) -> None:
     """Display the board in an understable manner to the user."""
 
     for row in board:
@@ -24,10 +24,10 @@ def display(board: Board, n: int) -> None:
                 print('.', end=' ')
         print()
 
-def not_finish(board: Board, n: int) -> bool:
+def not_finish(board: Board) -> bool:
     """Evaluate if the board is still playable or not."""
 
-    if int(argv[2]) is 0:
+    if argv[2] is '0':
         return 0 in flatten(board)
     else:
         return (0 in flatten(board) or
@@ -55,33 +55,33 @@ def select_square(board: Board, n: int, pawn_value: int) -> Tuple[int, int]:
     """
 
     print("Select a square where you may want to put a pawn.")
-    i = int(input("Its x coordinates: "))
-    j = int(input("Its y coordinates: "))
+    x = int(input("Its x coordinates: "))
+    y = int(input("Its y coordinates: "))
 
-    if square_valid(board, n, pawn_value, i, j):
-        return i, j
+    if square_valid(board, n, pawn_value, x, y):
+        return x, y
     else:
         print("You can't put a pawn there, sorry. Please, retry.")
         return select_square(board, n, pawn_value)
 
-def square_valid(board: Board, n: int, pawn_value: int, i: int, j: int) -> bool:
-    """Check if the square at i and j is available to put a pawn on it."""
+def square_valid(board: Board, n: int, pawn_value: int, x: int, y: int) -> bool:
+    """Check if the square at x and y is available to put a pawn on it."""
 
-    return (coordinates_within_board(n, i, j) and
-            square_playable(board, pawn_value, i, j))
+    return (coordinates_within_board(n, x, y) and
+            square_playable(board, pawn_value, x, y))
 
-def coordinates_within_board(n: int, i: int, j: int) -> bool:
+def coordinates_within_board(n: int, x: int, y: int) -> bool:
     """Are the given coordinates inside the board?"""
 
-    return i < n and j < n and i >= 0 and j >= 0
+    return x < n and y < n and x >= 0 and y >= 0
 
-def square_playable(board: Board, pawn_value: int, i: int, j: int) -> bool:
-    """Can a pawn be placed onto the square at i and j?"""
+def square_playable(board: Board, pawn_value: int, x: int, y: int) -> bool:
+    """Can a pawn be placed onto the square at x and y?"""
 
-    square = board[j][i]
+    square = board[y][x]
     opponent_value = 3 if pawn_value is 1 else 1
 
-    if int(argv[2]) is 0:
+    if argv[2] is '0':
         return square is 0
     else:
         return (square is not pawn_value and
@@ -89,57 +89,57 @@ def square_playable(board: Board, pawn_value: int, i: int, j: int) -> bool:
                 square is not opponent_value and
                 square is not 5) # 5 is unplayable for the two players
 
-def update(board: Board, n: int, pawn_value: int, i: int, j: int) -> None:
+def update(board: Board, pawn_value: int, x: int, y: int) -> None:
     """Procedure that put a pawn at given coordinates and update the board
     accordingly.
     """
 
-    put_pawn_at(board, pawn_value, i, j)
-    block_row(board, pawn_value, j)
-    block_column(board, pawn_value, i)
-    block_diagonals(board, pawn_value, i, j)
+    put_pawn_at(board, pawn_value, x, y)
+    block_row(board, pawn_value, y)
+    block_column(board, pawn_value, x)
+    block_diagonals(board, pawn_value, x, y)
 
-def put_pawn_at(board: Board, pawn_value: int, i: int, j: int) -> None:
-    """Place on the board a player pawn at i and j."""
+def put_pawn_at(board: Board, pawn_value: int, x: int, y: int) -> None:
+    """Place on the board a player pawn at x and y."""
 
-    board[j][i] = 1 if int(argv[2]) is 0 else pawn_value
+    board[y][x] = 1 if argv[2] is '0' else pawn_value
 
-def block_row(board: Board, pawn_value: int, j: int) -> None:
-    """Change all squares on row j to unplayable for concerned player."""
+def block_row(board: Board, pawn_value: int, y: int) -> None:
+    """Change all squares on row y to unplayable for concerned player."""
 
-    for index, _ in enumerate(board[j]):
-        block(board, pawn_value, index, j)
+    for index, _ in enumerate(board[y]):
+        block(board, pawn_value, index, y)
 
-def block_column(board: Board, pawn_value: int, i: int) -> None:
-    """Change all squares on column i to unplayable for player owning
+def block_column(board: Board, pawn_value: int, x: int) -> None:
+    """Change all squares on column x to unplayable for player owning
     pawns with pawn_value.
     """
 
     for index, _ in enumerate(board):
-        block(board, pawn_value, i, index)
+        block(board, pawn_value, x, index)
 
-def block_diagonals(board: Board, pawn_value: int, i: int, j: int) -> None:
-    """Change all squares aligned diagonaly with pawn at i;j to unplayable."""
+def block_diagonals(board: Board, pawn_value: int, x: int, y: int) -> None:
+    """Change all squares aligned diagonaly with pawn at x;y to unplayable."""
 
     for row_index, row in enumerate(board):
         for col_index, _ in enumerate(row):
-            if abs(row_index-j) is abs(col_index-i):
+            if abs(row_index-y) is abs(col_index-x):
                 block(board, pawn_value, col_index, row_index)
 
-def block(board: Board, pawn_value: int, i: int, j: int) -> None:
-    """Block the square located at i and j, taking into account the player and
+def block(board: Board, pawn_value: int, x: int, y: int) -> None:
+    """Block the square located at x and y, taking into account the player and
     game mode."""
 
-    square = board[j][i]
+    square = board[y][x]
 
-    if int(argv[2]) is 0:
+    if argv[2] is '0':
         if square is 0:
-            board[j][i] = 2
+            board[y][x] = 2
     else:
         if square is 0:
-            board[j][i] = pawn_value+1
+            board[y][x] = pawn_value+1
         elif square is 2 or square is 4:
-            board[j][i] = 5
+            board[y][x] = 5
 
 def first_attack(n: int) -> None:
     """Main procedure."""
@@ -156,7 +156,7 @@ def first_attack(n: int) -> None:
     # Terminate the process
     exit(0)
 
-def greet():
+def greet() -> None:
     """Welcome the player(s)."""
 
     print("Welcome! Ready to play First Attack? Go!")
@@ -172,15 +172,15 @@ def turn(board: Board, n: int, _round: int = 1) -> int:
     pawn_value = 1 if player is 1 else 3 # player's pawns value
 
     print("This is Player " + str(player) + "'s turn.")
-    display(board, n)
+    display(board)
 
-    i, j = select_square(board, n, pawn_value)
-    update(board, n, pawn_value, i, j)
+    x, y = select_square(board, n, pawn_value)
+    update(board, pawn_value, x, y)
 
-    if not_finish(board, n):
+    if not_finish(board):
         return turn(board, n, _round+1)
     else:
-        display(board, n)
+        display(board)
         return player
 
 if __name__ == "__main__":
