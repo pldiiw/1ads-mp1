@@ -123,7 +123,7 @@ class BreaktroughTests(unittest.TestCase):
 
     def test_pawn_available_moves(self):
         long_board = [
-            [1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1],
+            [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1],
             [0, 1, 1, 1, 2, 1, 0, 2, 0, 0, 0]
         ]
 
@@ -145,7 +145,7 @@ class BreaktroughTests(unittest.TestCase):
                                              7,
                                              1
                                             ),
-            [6, 7, 8]
+            [6, 8]
         )
         self.assertEqual(
             breaktrough.pawn_available_moves(long_board,
@@ -283,9 +283,9 @@ class BreaktroughTests(unittest.TestCase):
             [2, 2, 2]
         ]
         white_supremacy = [
-            [1],
-            [2],
-            [0]
+            [0, 1],
+            [2, 1],
+            [0, 0]
         ]
 
         breaktrough.ai_turn(black_line_reach,

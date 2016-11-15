@@ -134,11 +134,12 @@ def pawn_available_moves(board: Board, n: int, p: int, player: int, x: int,
 
     facing_columns = pawn_facing_columns(p, x)
     facing_squares = pawn_facing_squares(board, n, player, x, y)
+    opponent = 3 - player
 
     return [
-        square[0]
-        for square in zip(facing_columns, facing_squares)
-        if square[1] is not player
+        col_index
+        for col_index, square in zip(facing_columns, facing_squares)
+        if square is not player and (col_index, square) != (x, opponent)
     ]
 
 def pawn_facing_columns(p: int, x: int) -> Row:
