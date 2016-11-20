@@ -123,7 +123,7 @@ def turn(board: Board, n: int, _round: int = 1):
     print("This is Player " + str(player) + "'s turn.")
     display(board)
 
-    if int(argv[2]) is player or int(argv[2]) is 3:
+    if int(argv[2]) is player:
         ai_turn(board, n, player)
     else:
         player_turn(board, n, player)
@@ -213,5 +213,7 @@ if __name__ == "__main__":
         print("Invalid arguments.")
         print("Usage:",
               "python3 pleiadis.py <board_size> <ai_player>")
-        print("ai_player: ")
+        print("board_size: Board's width and height")
+        print("ai_player: 1 will make AI play as Player 1, 2 as Player 2, and \
+               anything else will disable AI.")
         exit(1)
