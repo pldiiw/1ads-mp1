@@ -163,7 +163,7 @@ def ai_turn(board: Board, n: int, player: int) -> None:
     put_pawn_at(board, player, x, y)
 
 def get_non_sym_pawns(board: Board, n: int,
-                                  player: int) -> List[Tuple[int, int]]:
+                      player: int) -> List[Tuple[int, int]]:
     """Retrieve all the (x, y) coords of all pawns belonging to player that
     don't have whatever pawn placed symmetrically to it.
     """
@@ -205,7 +205,7 @@ def can_still_play(board: Board, n: int, player: int, _x: int = 0,
 
 if __name__ == "__main__":
     # argv[1]: board size
-    # argv[2]: enable or not ai
+    # argv[2]: ai's player number
 
     if len(argv) == 3:
         pleiadis(int(argv[1]))
@@ -214,6 +214,6 @@ if __name__ == "__main__":
         print("Usage:",
               "python3 pleiadis.py <board_size> <ai_player>")
         print("board_size: Board's width and height")
-        print("ai_player: 1 will make AI play as Player 1, 2 as Player 2, and \
-               anything else will disable AI.")
+        print("ai_player: 1 will make AI play as Player 1, 2 as Player 2, and",
+              "anything else will disable AI.")
         exit(1)

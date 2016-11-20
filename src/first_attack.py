@@ -194,6 +194,7 @@ if __name__ == "__main__":
         print("Invalid arguments.")
         print("Usage:",
               "python3 first_attack.py <board_size> <color_mode>")
-        print("Setting the color_mode parameter to 0 will launch the game into",
-              "the single color mode and to 1 the bi-color mode.")
+        print("board_size: Set the board's width and height")
+        print("color_mode: Setting this parameter to 0 will launch the game",
+              "into the single color mode and to 1 the bi-color mode.")
         exit(1)

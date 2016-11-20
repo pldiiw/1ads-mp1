@@ -269,7 +269,7 @@ def flatten(l: List[List[Any]]) -> List[Any]:
 if __name__ == "__main__":
     # argv[1]: board height
     # argv[2]: board width
-    # argv[3]: enable or don't AI
+    # argv[3]: ai's player number
 
     if len(argv) == 4:
         breaktrough(int(argv[1]), int(argv[2]))
@@ -277,6 +277,9 @@ if __name__ == "__main__":
         print("Invalid arguments.")
         print("Usage:",
               "python3 breaktrough.py <board_height> <board_width> <ai_color>")
-        print("Setting the ia_color parameter to 1 will let the IA play the",
-              "white pawns, 2 the black pawns. Anything else will disable IA.")
+        print("board_height: Set board's height")
+        print("board_width: Set board's width")
+        print("ai_color: Setting this parameter to 1 will let AI play as the",
+              "white pawns, 2 as the black pawns and anything else will",
+              "disable it.")
         exit(1)
