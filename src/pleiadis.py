@@ -2,6 +2,7 @@
 
 from sys import argv
 from typing import List, Tuple, Any
+from random import choice
 
 Row = List[int]
 Board = List[Row]
@@ -57,8 +58,7 @@ def is_empty(board: Board, x: int, y: int) -> bool:
 
     return board[y][x] is 0
 
-def respect_adjacency_rule(board: Board, player: int, x: int,
-                           y: int) -> bool:
+def respect_adjacency_rule(board: Board, player: int, x: int, y: int) -> bool:
     """Does the square located at x and y would respect the rules about adjacent
     pawns if there was a pawn belonging to player there?"""
 
@@ -87,7 +87,7 @@ def count(l: List[Any], e: Any) -> int:
 def put_pawn_at(board: Board, pawn: int, x: int, y: int) -> None:
     """Place on the board a player pawn at x and y."""
 
-    board[x][y] = pawn
+    board[y][x] = pawn
 
 def pleiadis(n: int) -> None:
     """Main procedure."""
@@ -114,29 +114,78 @@ def congrats(player: int) -> None:
 
     print("Congratulations player " + str(player) + "! You have won this game!")
 
-def turn(board: Board, n: int, _round: int = 1) -> int:
-    """Execute one turn of the game. If no winner is found, goes recursive."""
+def turn(board: Board, n: int, _round: int = 1):
+    """Execute one turn of the game."""
 
     player = 2 - _round % 2
+    opponent = 3 - player
 
     print("This is Player " + str(player) + "'s turn.")
     display(board)
 
-    x, y = select_square(board, n, player)
-    put_pawn_at(board, player, x, y)
+    if int(argv[2]) is player or int(argv[2]) is 3:
+        ai_turn(board, n, player)
+    else:
+        player_turn(board, n, player)
 
-    if not_finish(board, n):
+    # if opponent can still play, initiate a new turn
+    if can_still_play(board, n, opponent):
         return turn(board, n, _round+1)
     else:
         display(board)
         return player
 
-def not_finish(board: Board, n: int) -> bool:
-    """Evaluate if the board is still playable or not. If the two players can
-    still play, then the game is not over yet.
+def player_turn(board: Board, n: int, player: int) -> None:
+    """Process player's turn."""
+
+    x, y = select_square(board, n, player)
+    put_pawn_at(board, player, x, y)
+
+def ai_turn(board: Board, n: int, player: int) -> None:
+    """Process ai's turn."""
+
+    print("(AI's turn.)")
+
+    non_sym_enemy_pawns = get_non_sym_pawns(board, n, player)
+    print(non_sym_enemy_pawns)
+
+    # if AI plays first turn, put pawn at center of board
+    if board == new_board(n):
+        x = (n-1) // 2
+        y = x
+    elif non_sym_enemy_pawns != []:
+        x = n-1 - non_sym_enemy_pawns[0][0]
+        y = n-1 - non_sym_enemy_pawns[0][1]
+    else:
+        x, y = select_random_square(board, n, player)
+
+    print("Putting a pawn at [" + str(x) + ";" + str(y) + "].")
+    put_pawn_at(board, player, x, y)
+
+def get_non_sym_pawns(board: Board, n: int,
+                                  player: int) -> List[Tuple[int, int]]:
+    """Retrieve all the (x, y) coords of all pawns belonging to player that
+    don't have whatever pawn placed symmetrically to it.
     """
 
-    return can_still_play(board, n, 1) and can_still_play(board, n, 2)
+    return [
+        (x, y)
+        for y, row in enumerate(board)
+        for x, square in enumerate(row)
+        if (square is 3-player and
+            square_valid(board, n, player, n-1 - x, n-1 - y) and
+            (x, y) != ((n-1)//2, (n-1)//2))
+    ]
+
+def select_random_square(board: Board, n: int, player: int) -> Tuple[int, int]:
+    """Return coodinates of a random square where player can put a pawn."""
+
+    return choice([
+        (x, y)
+        for y, row in enumerate(board)
+        for x, _ in enumerate(row)
+        if square_valid(board, n, player, x, y)
+    ])
 
 def can_still_play(board: Board, n: int, player: int, _x: int = 0,
                    _y: int = 0) -> bool:
@@ -163,6 +212,6 @@ if __name__ == "__main__":
     else:
         print("Invalid arguments.")
         print("Usage:",
-              "python3 pleiadis.py <board_size> <enable_ai>")
-        print("Setting enable_ai to 1 will enable AI. Use 0 to disable it.")
+              "python3 pleiadis.py <board_size> <ai_player>")
+        print("ai_player: ")
         exit(1)
