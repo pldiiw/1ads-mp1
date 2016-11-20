@@ -167,6 +167,7 @@ def congrats(player: int):
     print("Congratulations player " + str(player) + "! You have won this game!")
 
 def turn(board: Board, n: int, _round: int = 1) -> int:
+    """Execute one turn of the game. If no winner is found, goes recursive."""
 
     player = 2 - _round % 2
     pawn_value = 1 if player is 1 else 3 # player's pawns value
