@@ -194,11 +194,22 @@ def sanitized_int_input(s: str) -> int:
         print("Here's the exception:", exception)
         return sanitized_int_input(s)
 
+def is_convertible_to_int(v: Any) -> bool:
+    """"""
+
+    try:
+        test = int(v)
+        return True
+    except:
+        return False
+
 if __name__ == "__main__":
     # argv[1]: board size
     # argv[2]: unicolor or bicolor game mode
 
-    if len(argv) == 3:
+    if (len(argv) == 3 and
+        is_convertible_to_int(agv[1]) and
+        is_convertible_to_int(argv[2])):
         first_attack(int(argv[1]))
     else:
         print("Invalid arguments.")

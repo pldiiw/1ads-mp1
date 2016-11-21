@@ -278,12 +278,24 @@ def sanitized_int_input(s: str) -> int:
         print("Here's the exception:", exception)
         return sanitized_int_input(s)
 
+def is_convertible_to_int(v: Any) -> bool:
+    """"""
+
+    try:
+        test = int(v)
+        return True
+    except:
+        return False
+
 if __name__ == "__main__":
     # argv[1]: board height
     # argv[2]: board width
     # argv[3]: ai's player number
 
-    if len(argv) == 4:
+    if (len(argv) == 4 and
+        is_convertible_to_int(argv[1]) and
+        is_convertible_to_int(argv[2]) and
+        is_convertible_to_int(argv[3])):
         breaktrough(int(argv[1]), int(argv[2]))
     else:
         print("Invalid arguments.")
