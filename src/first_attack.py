@@ -55,8 +55,8 @@ def select_square(board: Board, n: int, pawn_value: int) -> Tuple[int, int]:
     """
 
     print("Select a square where you may want to put a pawn.")
-    x = int(input("Its x coordinates: "))
-    y = int(input("Its y coordinates: "))
+    x = sanitized_int_input("Its x coordinates: ")
+    y = sanitized_int_input("Its y coordinates: ")
 
     if square_valid(board, n, pawn_value, x, y):
         return x, y
@@ -183,6 +183,16 @@ def turn(board: Board, n: int, _round: int = 1) -> int:
     else:
         display(board)
         return player
+
+def sanitized_int_input(s: str) -> int:
+    """"""
+
+    try:
+        return int(input(s))
+    except Exception as exception:
+        print("There was an error, please enter a number.")
+        print("Here's the exception:", exception)
+        return sanitized_int_input(s)
 
 if __name__ == "__main__":
     # argv[1]: board size

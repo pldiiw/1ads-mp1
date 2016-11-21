@@ -36,8 +36,8 @@ def select_pawn(board: Board, n: int, p: int, player: int) -> Tuple[int, int]:
     """Let the player choose a pawn that is able to move and returns it."""
 
     print("Choose the pawn you want to move.")
-    x = int(input("Its x coordinates: "))
-    y = int(input("Its y coordinates: "))
+    x = sanitized_int_input("Its x coordinates: ")
+    y = sanitized_int_input("Its y coordinates: ")
 
     if pawn_valid(board, n, p, player, x, y):
         return x, y
@@ -117,7 +117,9 @@ def where_(board: Board, n: int, p: int, player: int, x: int, y: int) -> int:
     """
 
     available_moves = pawn_available_moves(board, n, p, player, x, y)
-    pick = int(input("Column number (" + str(available_moves)[1:-1] + "): "))
+    pick = sanitized_int_input("Column number ("
+                               + str(available_moves)[1:-1]
+                               + "): ")
 
     if pick in available_moves:
         return pick
@@ -265,6 +267,16 @@ def flatten(l: List[List[Any]]) -> List[Any]:
     """
 
     return [x for y in l for x in y]
+
+def sanitized_int_input(s: str) -> int:
+    """"""
+
+    try:
+        return int(input(s))
+    except Exception as exception:
+        print("There was an error, please enter a number.")
+        print("Here's the exception:", exception)
+        return sanitized_int_input(s)
 
 if __name__ == "__main__":
     # argv[1]: board height
