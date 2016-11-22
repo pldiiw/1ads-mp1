@@ -42,8 +42,12 @@ clarity. I tried to follow the PEP-8 as close as possible and used the
 [pylint][pylint] tool to lint the code to avoid syntax mistakes.
 
 ### Git
-
-### Readme
+The version control software Git is a tool that became unavoidable in the IT
+world. Except for the fact that I use it on a everyday basis, the bias to use it
+on this project was to have a more organized workflow and keep track of how I
+managed to accomplish the writing of the 3 games. [This repository is also
+hosted on GitHub if you're willing to explore the repository in a pleasant
+way.][gh]
 
 ## Project Hierarchy
 
@@ -89,3 +93,4 @@ University.
 [pylint]: https://www.pylint.org/
 [freebsd]: https://en.wikipedia.org/wiki/BSD_licenses#2-clause
 [funcannon]: https://www.python.org/dev/peps/pep-3107/
+[gh]: https://github.com/pldiiw/1ads-mp1
