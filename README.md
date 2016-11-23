@@ -10,7 +10,7 @@ pawns games, namely Breaktrough by Dan Troyka, Frank Harary's First Attack and
 ## Followed Guidelines
 
 This project was an opportunity for me to experiment some concepts I read about
-and curious to see in action.
+and was curious to see in action.
 
 ### Clarity
 First things first, a huge emphasis was put into clarity of code. Statistics
@@ -21,28 +21,33 @@ inline comments when things get a bit obfuscated, extensive variable and
 function naming and straight-to-the-goal statements.
 
 ### [Functional Programming][fp]
-The use of a functional programming-like approach also helped. Apart from IO
-and lists' side-effect-loving element modifications, functions tries to be as
-pure as possible. This approach results in a lot of functions being defined, for
-the majority short ones, bringing higher abstraction in the code as a whole.
+The use of a functional programming-like approach helped. Apart from IO and
+lists' side-effect-loving element modifications, I tried to write as pure as
+possible functions. This resulted in a lot of functions being defined, for the
+majority short ones, bringing higher abstraction in the code as a whole, and
+astonishingly pleasant code to write and read.
 
 ### [Function Annotation][funcannon]
+New feature in Python, you can now add metadata annotations to functions'
+arguments and return values, enabling you to declare typing! I used it because
+the ability to type check your functions can prevent bugs ahead of runtime,
+which, again, might result in a huge gain of time.
 
 ### Testing
 You will see a *test* directory. This directory contains a test suite for each
 one of the games. This practice let me write my sources files and afterwards
-check every written functions if they produce the results I expect from them. It
-prevented many unseen bugs in the whole writing process and saved time in ingame
-testing.
+check every written functions if they produce the results I expected from them.
+It prevented many unseen bugs in the whole writing process and saved time in
+ingame testing.
 
 ### [PEP-8][pep8] and Code Linting
 Standards are meant to be followed. It helps developers find their marks
 quicker by bearing consistency across projects. It goes hand in hand with
 clarity. I tried to follow the PEP-8 as close as possible and used the
-[pylint][pylint] tool to lint the code to avoid syntax mistakes.
+[pylint][pylint] tool to avoid syntax mistakes.
 
 ### Git
-The version control software Git is a tool that became unavoidable in the IT
+The Git version control software is a tool that became unavoidable in the IT
 world. Except for the fact that I use it on a everyday basis, the bias to use it
 on this project was to have a more organized workflow and keep track of how I
 managed to accomplish the writing of the 3 games. [This repository is also
@@ -51,8 +56,8 @@ way.][gh]
 
 ## Project Hierarchy
 
-All games source files can be found under the `src` directory. 
-Tests source files are under the `test` directory.
+All games source files can be found in the `src` directory.  
+Tests are under the `test` directory.
 
 ## Installation
 
@@ -82,10 +87,10 @@ Run the test script
 
 ## License
 
-This repository is under the Unlicense. See the LICENSE for more information.
+This repository is under the Unlicense. See the LICENSE for more information.  
 Keep in mind that the final version (tagged as v1.0.0) delivered to SUPINFO is
 automatically licensed under the [FreeBSD][freebsd] to SUPINFO International
-University.
+University according to their regulation.
 
 [fp]: https://en.wikipedia.org/wiki/Functional_programming
 [stat]: https://github.com/getify/Functional-Light-JS/blob/master/ch1.md#communication
