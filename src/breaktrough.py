@@ -269,17 +269,17 @@ def flatten(l: List[List[Any]]) -> List[Any]:
     return [x for y in l for x in y]
 
 def sanitized_int_input(s: str) -> int:
-    """"""
+    """Prompt user until what he inputs is usable as an int."""
 
-    try:
-        return int(input(s))
-    except Exception as exception:
+    v = input(s)
+    if is_convertible_to_int(v):
+        return int(v)
+    else:
         print("There was an error, please enter a number.")
-        print("Here's the exception:", exception)
         return sanitized_int_input(s)
 
 def is_convertible_to_int(v: Any) -> bool:
-    """"""
+    """Test if v can be converted to an int."""
 
     try:
         test = int(v)
@@ -301,9 +301,9 @@ if __name__ == "__main__":
         print("Invalid arguments.")
         print("Usage:",
               "python3 breaktrough.py <board_height> <board_width> <ai_color>")
-        print("board_height: Set board's height")
-        print("board_width: Set board's width")
+        print("board_height: Set board's height. (int)")
+        print("board_width: Set board's width. (int)")
         print("ai_color: Setting this parameter to 1 will let AI play as the",
               "white pawns, 2 as the black pawns and anything else will",
-              "disable it.")
+              "disable it. (int)")
         exit(1)

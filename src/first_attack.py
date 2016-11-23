@@ -185,17 +185,17 @@ def turn(board: Board, n: int, _round: int = 1) -> int:
         return player
 
 def sanitized_int_input(s: str) -> int:
-    """"""
+    """Prompt user until what he inputs is usable as an int."""
 
-    try:
-        return int(input(s))
-    except Exception as exception:
+    v = input(s)
+    if is_convertible_to_int(v):
+        return int(v)
+    else:
         print("There was an error, please enter a number.")
-        print("Here's the exception:", exception)
         return sanitized_int_input(s)
 
 def is_convertible_to_int(v: Any) -> bool:
-    """"""
+    """Test if v can be converted to an int."""
 
     try:
         test = int(v)
@@ -208,14 +208,14 @@ if __name__ == "__main__":
     # argv[2]: unicolor or bicolor game mode
 
     if (len(argv) == 3 and
-        is_convertible_to_int(agv[1]) and
+        is_convertible_to_int(argv[1]) and
         is_convertible_to_int(argv[2])):
         first_attack(int(argv[1]))
     else:
         print("Invalid arguments.")
         print("Usage:",
               "python3 first_attack.py <board_size> <color_mode>")
-        print("board_size: Set the board's width and height")
+        print("board_size: Set the board's width and height. (int)")
         print("color_mode: Setting this parameter to 0 will launch the game",
-              "into the single color mode and to 1 the bi-color mode.")
+              "into the single color mode and to 1 the bi-color mode. (int)")
         exit(1)

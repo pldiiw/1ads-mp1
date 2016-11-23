@@ -147,15 +147,16 @@ def ai_turn(board: Board, n: int, player: int) -> None:
     print("(AI's turn.)")
 
     non_sym_enemy_pawns = get_non_sym_pawns(board, n, player)
-    print(non_sym_enemy_pawns)
 
-    # if AI plays first turn, put pawn at center of board
+    # if AI plays the very first turn, put pawn at center of board
     if board == new_board(n):
         x = (n-1) // 2
         y = x
+    # otherwise, play symmetrically
     elif non_sym_enemy_pawns != []:
         x = n-1 - non_sym_enemy_pawns[0][0]
         y = n-1 - non_sym_enemy_pawns[0][1]
+    # or play random if no symmetrical move is possible
     else:
         x, y = select_random_square(board, n, player)
 
@@ -204,17 +205,17 @@ def can_still_play(board: Board, n: int, player: int, _x: int = 0,
                               (_y+1 if _x is n-1 else _y))
 
 def sanitized_int_input(s: str) -> int:
-    """"""
+    """Prompt user until what he inputs is usable as an int."""
 
-    try:
-        return int(input(s))
-    except Exception as exception:
+    v = input(s)
+    if is_convertible_to_int(v):
+        return int(v)
+    else:
         print("There was an error, please enter a number.")
-        print("Here's the exception:", exception)
         return sanitized_int_input(s)
 
 def is_convertible_to_int(v: Any) -> bool:
-    """"""
+    """Test if v can be converted to an int."""
 
     try:
         test = int(v)
@@ -234,7 +235,7 @@ if __name__ == "__main__":
         print("Invalid arguments.")
         print("Usage:",
               "python3 pleiadis.py <board_size> <ai_player>")
-        print("board_size: Board's width and height")
+        print("board_size: Board's width and height. (int)")
         print("ai_player: 1 will make AI play as Player 1, 2 as Player 2, and",
-              "anything else will disable AI.")
+              "anything else will disable AI. (int)")
         exit(1)
