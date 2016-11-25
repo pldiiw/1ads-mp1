@@ -38,7 +38,7 @@ def select_square(board: Board, n: int, player: int) -> Tuple[int, int]:
     if square_valid(board, n, player, x, y):
         return x, y
     else:
-        print("You can't put a pawn there, sorry. Please, retry.")
+        print("You can't put a pawn here, sorry. Please, retry.")
         return select_square(board, n, player)
 
 def square_valid(board: Board, n: int, player: int, x: int, y: int) -> bool:
@@ -112,7 +112,7 @@ def greet() -> None:
 def congrats(player: int) -> None:
     """Felicitate player for winning the game."""
 
-    print("Congratulations player " + str(player) + "! You have won this game!")
+    print("Congratulations Player " + str(player) + "! You have won this game!")
 
 def turn(board: Board, n: int, _round: int = 1):
     """Execute one turn of the game."""

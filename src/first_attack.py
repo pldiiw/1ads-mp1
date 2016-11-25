@@ -31,8 +31,8 @@ def not_finish(board: Board) -> bool:
         return 0 in flatten(board)
     else:
         return (0 in flatten(board) or
-                0 in empty_squares_with_value(board, 2) or
-                0 in empty_squares_with_value(board, 4))
+                0 in flatten(flush_values(board, 2)) or
+                0 in flatten(flush_values(board, 4)))
 
 def flatten(l: List[List[Any]]) -> List[Any]:
     """Given a two dimensional list, return a one dimensional list being the
@@ -41,12 +41,12 @@ def flatten(l: List[List[Any]]) -> List[Any]:
 
     return [x for y in l for x in y]
 
-def empty_squares_with_value(board: Board, value: int) -> Row:
+def flush_values(board: Board, value: int) -> Board:
+    """Return a board with all squares containing value as empty."""
 
     return [
-        (0 if square is value else square)
+        [(0 if square is value else square) for square in row]
         for row in board
-        for square in row
     ]
 
 def select_square(board: Board, n: int, pawn_value: int) -> Tuple[int, int]:
@@ -61,7 +61,7 @@ def select_square(board: Board, n: int, pawn_value: int) -> Tuple[int, int]:
     if square_valid(board, n, pawn_value, x, y):
         return x, y
     else:
-        print("You can't put a pawn there, sorry. Please, retry.")
+        print("You can't put a pawn here, sorry. Please, retry.")
         return select_square(board, n, pawn_value)
 
 def square_valid(board: Board, n: int, pawn_value: int, x: int, y: int) -> bool:
@@ -161,10 +161,10 @@ def greet() -> None:
 
     print("Welcome! Ready to play First Attack? Go!")
 
-def congrats(player: int):
+def congrats(player: int) -> None:
     """Felicitate player for winning the game."""
 
-    print("Congratulations player " + str(player) + "! You have won this game!")
+    print("Congratulations Player " + str(player) + "! You have won this game!")
 
 def turn(board: Board, n: int, _round: int = 1) -> int:
     """Execute one turn of the game. If no winner is found, goes recursive."""

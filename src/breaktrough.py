@@ -124,7 +124,7 @@ def where_(board: Board, n: int, p: int, player: int, x: int, y: int) -> int:
     if pick in available_moves:
         return pick
     else:
-        print("You cannot move it there, please retry.")
+        print("You cannot move it here, please retry.")
         return where_(board, n, p, player, x, y)
 
 def pawn_available_moves(board: Board, n: int, p: int, player: int, x: int,
@@ -153,7 +153,7 @@ def pawn_facing_columns(p: int, x: int) -> Row:
         if column >= 0 and column < p
     ]
 
-def breaktrough(n: int, p: int):
+def breaktrough(n: int, p: int) -> None:
     """This is the main procedure of the game."""
 
     # Raising number of rows if it does not match the rules
@@ -175,19 +175,19 @@ def breaktrough(n: int, p: int):
 def greet() -> None:
     """Welcome the player(s)."""
 
-    print("Welcome! Ready to play breaktrough? Go!")
+    print("Welcome! Ready to play Breaktrough? Go!")
 
 def congrats(player: int) -> None:
     """Felicitate player for winning the game."""
 
-    print("Congratulations player " + str(player) + "! You have won this game!")
+    print("Congratulations Player " + str(player) + "! You have won this game!")
 
 def turn(board: Board, n: int, p: int, _round: int = 1) -> int:
     """Compute a turn."""
 
     player = 2 - _round % 2
 
-    print("This is player " + str(player) + "'s turn.")
+    print("This is Player " + str(player) + "'s turn.")
     display(board)
 
     if int(argv[3]) is player:
@@ -219,7 +219,7 @@ def ai_turn(board: Board, n: int, p: int, player: int) -> None:
     x, y = select_random_pawn(board, n, p, player)
     pawn_dest_column = choice(pawn_available_moves(board, n, p, player, x, y))
 
-    print("Move pawn [", x, ";", y, "] to [", pawn_dest_column, ";",
+    print("Moving pawn at [", x, ";", y, "] to [", pawn_dest_column, ";",
           y+move_direction(player), "]")
 
     move_pawn(board, x, y, pawn_dest_column)
