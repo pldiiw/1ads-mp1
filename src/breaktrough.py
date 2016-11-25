@@ -293,9 +293,9 @@ if __name__ == "__main__":
     # argv[3]: ai's player number
 
     if (len(argv) == 4 and
-        is_convertible_to_int(argv[1]) and
-        is_convertible_to_int(argv[2]) and
-        is_convertible_to_int(argv[3])):
+            is_convertible_to_int(argv[1]) and
+            is_convertible_to_int(argv[2]) and
+            is_convertible_to_int(argv[3])):
         breaktrough(int(argv[1]), int(argv[2]))
     else:
         print("Invalid arguments.")

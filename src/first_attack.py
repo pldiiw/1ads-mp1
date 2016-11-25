@@ -208,8 +208,8 @@ if __name__ == "__main__":
     # argv[2]: unicolor or bicolor game mode
 
     if (len(argv) == 3 and
-        is_convertible_to_int(argv[1]) and
-        is_convertible_to_int(argv[2])):
+            is_convertible_to_int(argv[1]) and
+            is_convertible_to_int(argv[2])):
         first_attack(int(argv[1]))
     else:
         print("Invalid arguments.")

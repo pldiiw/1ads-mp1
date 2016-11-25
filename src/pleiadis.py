@@ -228,8 +228,8 @@ if __name__ == "__main__":
     # argv[2]: ai's player number
 
     if (len(argv) == 3 and
-        is_convertible_to_int(argv[1]) and
-        is_convertible_to_int(argv[2])):
+            is_convertible_to_int(argv[1]) and
+            is_convertible_to_int(argv[2])):
         pleiadis(int(argv[1]))
     else:
         print("Invalid arguments.")
